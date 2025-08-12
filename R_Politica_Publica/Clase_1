@@ -1,1 +1,108 @@
+############################################################
+# WDI (Banco Mundial)
+# Objetivo: Buscar, descargar, manipular y visualizar indicadores
+# usando el paquete WDI en R. 
+##############################################################
 
+# ==========================================================
+# 0) Preparación del entorno
+# ==========================================================
+# Instala paquetes si hace falta (ejecuta solo una vez)
+# install.packages("WDI")
+# install.packages("dplyr")
+# install.packages("ggplot2")
+
+library(WDI)
+library(dplyr)
+library(ggplot2)
+
+# Notas:
+# - Evita acentos en nombres de objetos.
+
+# ==========================================================
+# 1) Explora indicadores con WDIsearch()
+# ==========================================================
+# 1.1: Busca indicadores sobre inflación, educación y esperanza de vida.
+# Sugerencia: cambia el término dentro de WDIsearch("...")
+
+indicadores_inflation <- WDIsearch("inflation")
+indicadores_education <- WDIsearch("education")
+indicadores_lifeexp   <- WDIsearch("life expectancy")
+
+# 1.2: ¿Cuántos resultados devuelve cada búsqueda?
+# usa nrow()
+
+nrow(informacion_inflation <- indicadores_inflation)
+nrow(informacion_education <- indicadores_education)
+nrow(informacion_lifeexp   <- indicadores_lifeexp)
+
+# 1.3: Observa las columnas devueltas (nombre corto, código, fuente, etc.)
+# usa head() o View()
+head(indicadores_inflation)
+head(indicadores_education)
+View(indicadores_lifeexp)
+
+# El código del indicador se usa para descargar datos con WDI().
+
+# ==========================================================
+# 2) Descarga datos con WDI()
+# ==========================================================
+# Trabajaremos con PIB per cápita (USD a precios corrientes): NY.GDP.PCAP.CD
+# Paises: México (MEX), Brasil (BRA), Argentina (ARG)
+
+pibpc_mba <- WDI(
+  country = c("MEX", "BRA", "ARG"),
+  indicator = c(PIBPC = "NY.GDP.PCAP.CD"),
+  start = 2000,
+  end   = 2023
+)
+
+# Ver la tabla
+glimpse(pibpc_mba)
+# Columnas: iso2c, country, year, PIBPC
+
+# 2.1: ¿Cuál es el primer y último año disponible por país?
+# agrupa por country y resume min(year) y max(year)
+
+pibpc_mba %>%
+  group_by(country) %>%
+  summarise(min_year = min(year, na.rm = TRUE),
+            max_year = max(year, na.rm = TRUE))
+
+# ==========================================================
+# 3) Limpieza y preparación
+# ==========================================================
+# 3.1: Filtra solo los años 2010 en adelante.
+
+pibpc_2010 <- pibpc_mba %>%
+  filter(year >= 2010)
+
+# 3.2: Ordena la tabla por PIB per cápita (descendente) y observa el top 6.
+
+pibpc_2010 %>%
+  arrange(desc(PIBPC)) %>%
+  head(6)
+
+# 3.3: Para 2023, ¿qué país tuvo el mayor valor?
+
+pibpc_2023 <- pibpc_mba %>% filter(year == 2023)
+
+pibpc_2023 %>%
+  arrange(desc(PIBPC))
+
+# ==========================================================
+# 4) Visualización (líneas)
+# ==========================================================
+#  4.1: Grafica la serie de 2000–2023 comparando los 3 países.
+
+p <- ggplot(pibpc_mba, aes(x = year, y = PIBPC, color = country)) +
+  geom_line(size = 1) +
+  labs(title = "PIB per cápita (USD corrientes)",
+       subtitle = "México, Brasil y Argentina (2000–2023)",
+       x = "Año", y = "USD por persona",
+       caption = "Fuente: World Bank WDI (NY.GDP.PCAP.CD)") +
+  theme_minimal()
+
+p
+
+###########################
