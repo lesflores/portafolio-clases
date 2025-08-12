@@ -18,6 +18,8 @@ library(ggplot2)
 
 # Notas:
 # - Evita acentos en nombres de objetos.
+# paises <- WDI_data$country
+# View(paises)
 
 # ==========================================================
 # 1) Explora indicadores con WDIsearch()
