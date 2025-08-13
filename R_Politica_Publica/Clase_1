@@ -4,7 +4,7 @@
 # ==========================================================
 # WDI (Banco Mundial)
 # Objetivo: Buscar, descargar, manipular y visualizar indicadores
-# usando el paquete WDI en R
+# usando el paquete WDI en R 
 # ==========================================================
 
 # Instala paquetes (ejecuta solo una vez)
