@@ -81,7 +81,7 @@ pibpc_2023 %>%
   arrange(desc(PIBPC))
 
 # ----------------------------------------------------------
-# 4) Visualización (líneas)
+# (4) Gráfica
 # ----------------------------------------------------------
 #  4.1. Grafica la serie de 2000–2023 comparando los 3 países.
 
