@@ -1,0 +1,43 @@
+# ============================
+# Contingencia + Chi2
+# Datos: gss_cat (forcats)
+# Profesora: Lesly Flores
+# ============================
+
+# install.packages("forcats") 
+library(forcats)
+library(dplyr)
+library(writexl)
+
+# (1) Datos de la General Social Survey (incluido en forcats)
+gss <- gss_cat
+View(gss)
+summary(gss)
+
+# (2) Tabla de conteos (frecuencias absolutas)
+tab <- table(gss$partyid, gss$marital)
+tab
+# Filas = partido político
+# Columnas = estado civil
+
+# (3) Prueba Chi2 (¿hay relación entre las variables?)
+chisq.test(tab)
+
+# El valor de X-squared indica cuánto difieren los datos observados
+# de los que esperaríamos si no hubiera relación entre las variables.
+# df = grados de libertad, según el número de categorías.
+# p-value < 0.05 significa que rechazamos la hipótesis nula de independencia.
+# En este caso sí hay evidencia de que partido y estado civil están asociados.
+
+# (4) Porcentajes por FILA (cada partido = 100%)
+# Te dice: dentro de cada partido, cómo se reparte el estado civil
+
+prop_fila <- prop.table(tab, 1) * 100
+prop_fila_df <- as.data.frame.matrix(round(prop_fila, 1))
+prop_fila_df
+
+# (5) Porcentajes por COLUMNA (cada estado civil = 100%)
+# Te dice: dentro de cada estado civil, cómo se reparten los partidos
+prop_col <- prop.table(tab, 2) * 100
+prop_col_df <- as.data.frame.matrix(round(prop_col, 1))
+prop_col_df
