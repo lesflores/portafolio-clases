@@ -13,7 +13,7 @@ gss <- gss_cat
 View(gss)
 summary(gss)
 
-# (2) Tabla de conteos (frecuencias absolutas)
+# (2) Tabla de frecuencias absolutas
 tab <- table(gss$partyid, gss$marital)
 tab
 # Filas = partido político
