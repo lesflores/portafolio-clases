@@ -7,7 +7,6 @@
 # install.packages("forcats") 
 library(forcats)
 library(dplyr)
-library(writexl)
 
 # (1) Datos de la General Social Survey (incluido en forcats)
 gss <- gss_cat
