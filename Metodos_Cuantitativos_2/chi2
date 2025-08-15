@@ -22,11 +22,7 @@ tab
 # (3) Prueba Chi2 (¿hay relación entre las variables?)
 chisq.test(tab)
 
-# El valor de X-squared indica cuánto difieren los datos observados
-# de los que esperaríamos si no hubiera relación entre las variables.
-# df = grados de libertad, según el número de categorías.
 # p-value < 0.05 significa que rechazamos la hipótesis nula de independencia.
-# En este caso sí hay evidencia de que partido y estado civil están asociados.
 
 # (4) Porcentajes por FILA (cada partido = 100%)
 # Te dice: dentro de cada partido, cómo se reparte el estado civil
