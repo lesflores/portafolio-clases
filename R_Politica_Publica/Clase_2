@@ -1,0 +1,89 @@
+# ==========================================================
+# Clase 2 Universidad de Guanajuato 
+# Profesora Lesly Flores
+# ==========================================================
+# WDI (Banco Mundial)
+# Objetivo: Analizar correlaciones entre indicadores de desarrollo
+# usando el paquete WDI en R 
+# ==========================================================
+
+# Instala paquetes (ejecuta solo una vez)
+# install.packages("WDI")
+# install.packages("dplyr")
+# install.packages("ggplot2")
+# install.packages("ggcorrplot")
+
+library(WDI)
+library(dplyr)
+library(ggplot2)
+library(ggcorrplot)
+
+# ----------------------------------------------------------
+# (1) Selección y descarga de indicadores
+# ----------------------------------------------------------
+# Indicadores:
+# - PIB per cápita: NY.GDP.PCAP.KD
+# - Esperanza de vida al nacer: SP.DYN.LE00.IN
+# - Índice de Gini: SI.POV.GINI
+# - Matrícula bruta en secundaria en %: SE.SEC.ENRR
+
+indicadores <- c(
+  pibpc   = "NY.GDP.PCAP.KD",
+  vida    = "SP.DYN.LE00.IN",
+  gini    = "SI.POV.GINI",
+  escolar = "SE.SEC.ENRR"
+)
+
+wdi <- WDI(country = "all", indicator = indicadores,
+           start = 2023, end = 2023)
+
+glimpse(wdi)
+
+# ----------------------------------------------------------
+# (2) Limpieza
+# ----------------------------------------------------------
+# Nos quedamos solo con las columnas numéricas de interés.
+# Eliminamos valores perdidos (NA) para trabajar con casos completos.
+
+datos <- wdi %>%
+  select(pibpc, vida, gini, escolar) %>%
+  filter(complete.cases(.))
+
+# ----------------------------------------------------------
+# (3) Matriz de correlación
+# ----------------------------------------------------------
+# Calculamos correlación de Pearson.
+# El coeficiente va de -1 (negativa) a +1 (positiva).
+
+corr_wdi <- cor(datos, use = "pairwise.complete.obs") %>% round(2)
+corr_wdi
+
+# ----------------------------------------------------------
+# (4) Visualización
+# ----------------------------------------------------------
+# Matriz de correlación.
+
+ggcorrplot(corr_wdi, type = "lower", lab = TRUE, show.legend = TRUE) +
+  ggtitle("Matriz de correlación (WDI, 2023)")
+
+# ----------------------------------------------------------
+# (5) Ejemplo clásico: Curva de Preston
+# ----------------------------------------------------------
+# Relación entre PIB per cápita y esperanza de vida.
+
+# Eliminamos filas con NA
+wdi_ok <- na.omit(wdi)
+
+# Correlación numérica
+cor(wdi_ok$pibpc, wdi_ok$vida, method = "pearson")
+
+# Gráfico de dispersión con escala logarítmica en PIB
+ggplot(wdi_ok, aes(pibpc, vida)) +
+  geom_point(alpha = .6) + geom_smooth(method = lm) +
+  scale_x_log10() +
+  labs(title = "Curva de Preston (2023)",
+       subtitle = "Relación entre ingreso y longevidad",
+       x = "PIB per cápita (log)", 
+       y = "Esperanza de vida (años)",
+       caption = "Fuente: World Bank WDI") +
+  theme_minimal()
