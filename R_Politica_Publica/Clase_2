@@ -8,9 +8,6 @@
 # ==========================================================
 
 # Instala paquetes (ejecuta solo una vez)
-# install.packages("WDI")
-# install.packages("dplyr")
-# install.packages("ggplot2")
 # install.packages("ggcorrplot")
 
 library(WDI)
