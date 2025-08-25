@@ -1,0 +1,89 @@
+# ==========================================================
+# Clase 3 Universidad de Guanajuato 
+# Profesora Lesly Flores
+# ==========================================================
+# Regresión lineal múltiple con datos de WDI
+# Objetivo: Estimar un modelo de vida esperada (años) en función
+# de PIB per cápita (log)  e inflación (%)
+# ==========================================================
+
+# Instala paquetes (ejecuta solo una vez)
+# install.packages("WDI")
+
+library(WDI)
+library(dplyr)
+library(ggplot2)
+library(ggcorrplot)
+
+# ----------------------------------------------------------
+# (1) Buscar indicadores con WDIsearch()
+# ----------------------------------------------------------
+# 1.1. Busca indicadores sobre inflación, educación y esperanza de vida...
+indicadores_vida <- WDIsearch("life expectancy")
+indicadores_pibpc <- WDIsearch("gdp per capita")
+indicadores_infl <- WDIsearch("inflation")
+
+# 1.2. ¿Cuántos resultados devuelve cada búsqueda?
+nrow(indicadores_vida)
+nrow(indicadores_pibpc)
+nrow(indicadores_infl)
+
+# 1.3. Revisa nombre de indicadores
+head(indicadores_vida)
+head(indicadores_pibpc)
+head(indicadores_infl)
+
+# ----------------------------------------------------------
+# (2) Descarga datos
+# ----------------------------------------------------------
+# Elegimos:
+# - Vida esperada total (años): SP.DYN.LE00.IN
+# - PIB per cápita (US$ corrientes): NY.GDP.PCAP.CD
+# - Inflación (% anual, IPC):FP.CPI.TOTL.ZG
+
+wdi <- WDI(
+  country   = "all",
+  indicator = c(
+    vida  = "SP.DYN.LE00.IN",
+    pibpc = "NY.GDP.PCAP.CD",
+    infl  = "FP.CPI.TOTL.ZG"),
+  start = 2010,
+  end   = 2023)
+
+glimpse(wdi)
+
+# ----------------------------------------------------------
+# (3) Limpieza
+# ----------------------------------------------------------
+
+# 3.1 Elimina casos con NA
+base <- na.omit(wdi)
+
+# 3.2 Transformación logarítmica del PIBpc
+base <- base %>% mutate(log_pibpc = log10(pibpc))
+
+# ----------------------------------------------------------
+# (4) Exploración rápida
+# ----------------------------------------------------------
+# 4.1 Calculamos correlación de Pearson 
+# El coeficiente va de -1 (negativa) a +1 (positiva).
+
+datos <- base %>%
+  select(log_pibpc, vida, infl)
+  
+corr_wdi <- cor(datos, use = "pairwise.complete.obs") %>% round(2)
+corr_wdi
+
+# Matriz de correlación
+
+ggcorrplot(corr_wdi, type = "lower", lab = TRUE, show.legend = TRUE) +
+  ggtitle("Matriz de correlación (WDI, 2023)")
+
+# ----------------------------------------------------------
+# (5) Modelo: Regresión lineal múltiple
+# ----------------------------------------------------------
+# Modelo: vida ~ log_pibpc + infl
+m1 <- lm(vida ~ log_pibpc + infl, data = base)
+
+# 5.1 Resultados del modelo
+summary(m1)
