@@ -58,6 +58,10 @@ datos <- base %>%
   
 corr_wdi <- cor(datos, use = "pairwise.complete.obs") %>% round(2)
 corr_wdi # El coeficiente va de -1 (negativa) a +1 (positiva)
+
+# Matriz de correlación
+ggcorrplot(corr_wdi, type = "lower", lab = TRUE, show.legend = TRUE) +
+  ggtitle("Matriz de correlación (WDI, 2023)")
 # ----------------------------------------------------------
 # (5) Modelo: Regresión lineal múltiple
 # ----------------------------------------------------------
