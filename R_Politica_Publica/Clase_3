@@ -12,7 +12,6 @@ library(WDI)
 library(dplyr)
 library(ggplot2)
 library(ggcorrplot)
-
 # ----------------------------------------------------------
 # (1) Buscar indicadores con WDIsearch()
 # ----------------------------------------------------------
@@ -25,7 +24,6 @@ indicadores_infl <- WDIsearch("inflation")
 head(indicadores_vida)
 head(indicadores_pibpc)
 head(indicadores_infl)
-
 # ----------------------------------------------------------
 # (2) Descarga datos
 # ----------------------------------------------------------
@@ -44,7 +42,6 @@ wdi <- WDI(
   end   = 2023)
 
 glimpse(wdi)
-
 # ----------------------------------------------------------
 # (3) Limpieza
 # ----------------------------------------------------------
@@ -53,11 +50,9 @@ base <- na.omit(wdi)
 
 # 3.2 Transformación logarítmica del PIBpc
 base <- base %>% mutate(log_pibpc = log10(pibpc))
-
 # ----------------------------------------------------------
-# (4) Exploración rápida
+# (4) Correlación
 # ----------------------------------------------------------
-# 4.1 Calculamos correlación de Pearson 
 datos <- base %>%
   select(log_pibpc, vida, infl)
   
