@@ -2,9 +2,7 @@
 # Universidad de Guanajuato
 # Profesora: Lesly Flores
 # Objetivo: comparar correlación simple vs parcial
-# Dataset: Quality of Government (QoG)
 # ==========================================================
-
 # install.packages("devtools")
 devtools::install_github("ropengov/rqog")
 library(rqog)
@@ -13,7 +11,6 @@ qog <- read_qog(which_data = "basic", data_type = "cross-sectional")
 library(ppcor)
 library(dplyr)
 library(ggplot2)
-
 #-----------------------------------------------------------
 # (2) Seleccionar variables
 # ti_cpi: Índice de Corrupción percibida (Transparency International)
@@ -26,18 +23,14 @@ base <- qog %>%
     corrupcion = ti_cpi,
     confianza = wvs_trust,
     pib = wdi_gdpcappppcon2017)
-
 #-----------------------------------------------------------
 # (3) Limpiar NAs
-
 base <- na.omit(base)
-
 #-----------------------------------------------------------
 # (4) Correlación simple (sin control)
 # Relación "bruta" entre corrupción y confianza
 cor_simple <- cor(base$corrupcion, base$confianza)
 cor_simple
-
 #-----------------------------------------------------------
 # (5) Correlación parcial (controlando PIB)
 # Mide la asociación entre corrupción y confianza "quitando" el efecto del PIB
