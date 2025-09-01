@@ -8,6 +8,7 @@ devtools::install_github("ropengov/rqog")
 library(rqog)
 qog <- read_qog(which_data = "basic", data_type = "cross-sectional")
 
+names(qog)
 library(ppcor)
 library(dplyr)
 library(ggplot2)
