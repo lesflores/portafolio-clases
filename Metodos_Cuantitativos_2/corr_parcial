@@ -3,7 +3,7 @@
 # Profesora: Lesly Flores
 # Objetivo: comparar correlación simple vs parcial
 # ==========================================================
-# install.packages("devtools")
+# (1) install.packages("devtools")
 devtools::install_github("ropengov/rqog")
 library(rqog)
 qog <- read_qog(which_data = "basic", data_type = "cross-sectional")
@@ -37,3 +37,59 @@ cor_simple
 # Mide la asociación entre corrupción y confianza "quitando" el efecto del PIB
 pc <- pcor.test(base$corrupcion, base$confianza, base$pib)
 pc
+
+# ==========================================================
+# (1) [NUEVA] base
+base2 <- qog %>% 
+  select(
+    pais       = cname,
+    corrupcion = ti_cpi, # Índice de percepción de corrupción (TI)
+    confianza  = wvs_trust, # Confianza interpersonal (WVS)
+    democracia = polity2, # Calidad democrática (Polity IV)
+    participacion = vdem_v2xel_frefair, # Elecciones libres y justas (proxy participación)
+    educacion  = wdi_educ_yrs, # Años promedio de escolaridad (WB)
+    desigualdad = wdi_gini) # Gini (WB)
+#-----------------------------------------------------------
+# (2) Limpiar NAs
+base2 <- na.omit(base)
+#-----------------------------------------------------------
+# (3) Correlación simple (sin control)
+# ----------------------------------------------------------
+cor_simple <- cor(base2$corrupcion, base2$confianza)
+cor_simple
+# ----------------------------------------------------------
+# (4) Correlación parcial controlando por democracia
+# ----------------------------------------------------------
+pc_dem <- pcor.test(base2$corrupcion, base2$confianza, base2$democracia)
+pc_dem
+# ----------------------------------------------------------
+# (5) Correlación parcial controlando por participación
+# ----------------------------------------------------------
+pc_part <- pcor.test(base2$corrupcion, base2$confianza, base2$participacion)
+pc_part
+
+# ----------------------------------------------------------
+# (6) Correlación parcial con varios controles (democracia + educación)
+# ----------------------------------------------------------
+Z <- base2 %>% select(democracia, educacion)
+pc_multi <- pcor.test(base2$corrupcion, base2$confianza, Z)
+pc_multi
+# ==========================================================
+# PREGUNTAS
+# ==========================================================
+# 1. Si la correlación parcial cambia al controlar por democracia,
+# ¿qué nos dice sobre el papel de las instituciones democráticas
+#  en la relación corrupción–confianza?
+
+# 2. ¿Qué implica controlar por participación electoral (elecciones libres y justas)?
+
+# 3. ¿La participación puede fortalecer la confianza aunque la corrupción sea alta?
+
+# 4. ¿Cómo se compara el efecto de controlar por democracia vs educación?
+
+# 5. ¿Cuál de estos factores "explica más" la relación?
+
+# 6. ¿Puedes pensar en un ejemplo empírico (país o región) donde
+# la participación ciudadana cambie la percepción de corrupción?
+
+# 7. ¿Por qué no debemos confundir correlación parcial con causalidad?
