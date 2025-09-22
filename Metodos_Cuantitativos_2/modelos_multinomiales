@@ -1,0 +1,70 @@
+# ==========================================================
+# Universidad de Guanajuato
+# Profesora: Lesly Flores
+# Tema: Modelos categóricos multinomiales
+# Ejemplo: Intención de voto en Chile (1988) 
+# Fuente: https://cran.r-project.org/web/packages/carData/carData.pdf
+# ==========================================================
+
+# (1) Instalar y cargar librerías
+# ----------------------------------------------------------
+# Dataset Chile: incluye intención de voto, edad, ingreso, educación, religión
+#install.packages("carData")
+#install.packages("nnet")
+#install.packages("marginaleffects")
+#install.packages("ggplot2")
+
+library(carData)
+library(nnet)
+library(marginaleffects)
+library(dplyr)
+library(ggplot2)
+
+# (2) Cargar base de datos
+# ----------------------------------------------------------
+data("Chile")
+head(Chile)
+str(Chile)
+
+# Variable dependiente: vote (5 categorías)
+table(Chile$vote)
+
+# (3) Ajustar modelo logit multinomial
+# ----------------------------------------------------------
+# Modelo: voto ~ edad + ingreso + statusquo
+# - statusquo mide la opinión sobre la situación económica bajo Pinochet
+# - Usamos "No" como categoría de referencia
+mod_chile <- multinom(vote ~ age + income + statusquo, data = Chile, trace = FALSE)
+
+summary(mod_chile)
+
+# (4) Coeficientes e interpretación
+# ----------------------------------------------------------
+# Exp(coef) = Odds ratios
+exp(coef(mod_chile))
+
+# (5) Average Marginal Effects (AME)
+
+ame_age <- avg_slopes(mod_chile, variables = "age", type = "probs")
+ame_age
+
+# A (Abstain): -0.0014
+# Cada año extra de edad reduce en promedio 0.14 puntos porcentuales la probabilidad de abstenerse.
+
+# N (No): -0.0017
+# Cada año extra de edad reduce en 0.17 pp la probabilidad de votar No.
+
+# U (Undecided): +0.0026
+# Cada año extra de edad aumenta en 0.26 pp la probabilidad de estar indeciso.
+
+# Y (Yes): +0.0005
+# Cada año extra de edad aumenta en 0.05 pp la probabilidad de votar Sí.
+
+ame_statusquo <- avg_slopes(mod_chile, variables = "statusquo", type = "probs")
+ame_statusquo
+
+# ==========================================================
+# Preguntas
+# ==========================================================
+# 1. ¿En qué contexto político se situó este plebiscito y por qué es relevante para el análisis?
+# 2. ¿Por qué un modelo multinomial es más adecuado aquí que un logit binario?
