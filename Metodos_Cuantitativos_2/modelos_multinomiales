@@ -34,7 +34,10 @@ table(Chile$vote)
 # Modelo: voto ~ edad + ingreso + statusquo
 # - statusquo mide la opinión sobre la situación económica bajo Pinochet
 # - Usamos "No" como categoría de referencia
-mod_chile <- multinom(vote ~ age + income + statusquo, data = Chile, trace = FALSE)
+# Cambiar la categoría de referencia
+# Chile$sex <- relevel(Chile$sex, ref = "M")
+
+mod_chile <- multinom(vote ~ age + income + sex + statusquo, data = Chile, trace = FALSE)
 
 summary(mod_chile)
 
