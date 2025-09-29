@@ -8,7 +8,7 @@
 library(readxl)
 
 # Importar base de datos
-data <- read_excel("identidad_pol.xlsx")
+data <- read_excel("identidad_pol.xlsx") #base de datos aquí: 
 View(data)  # (opcional) ver datos en tabla
 
 # Ajustar modelo logit
