@@ -8,7 +8,7 @@
 library(readxl)
 
 # Importar base de datos
-data <- read_excel("identidad_pol.xlsx") #base de datos aquí: https://github.com/lesflores/portafolio-clases/blob/main/R_Politica_Publica/Identidad_pol.xlsx
+data <- read_excel("identidad_pol.xlsx") #base de datos de la alumna Emilia Ximena: https://github.com/lesflores/portafolio-clases/blob/main/R_Politica_Publica/Identidad_pol.xlsx
 View(data)  # (opcional) ver datos en tabla
 
 # Ajustar modelo logit
