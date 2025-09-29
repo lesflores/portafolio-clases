@@ -1,0 +1,61 @@
+#--------------------
+# Regresión logística binaria/logit
+# Profesora: Lesly Flores
+# Universidad de Guanajuato
+#--------------------
+
+# Librería para leer Excel
+library(readxl)
+
+# Importar base de datos
+data <- read_excel("identidad_pol.xlsx")
+View(data)  # (opcional) ver datos en tabla
+
+# Ajustar modelo logit
+# - A4 es la variable dependiente (dicotómica)
+# - A1, A2, A5 son dicotómicas (0/1)
+# - A6 es ordinal (1 a 4)
+modelo <- glm(A4 ~ A1 + A2 + A5 + A6,
+              data = data,
+              family = binomial("logit"))
+
+# Resumen del modelo: coeficientes, errores estándar, valores z y p
+summary(modelo)
+
+#--------------------
+# Predicción de probabilidades
+#--------------------
+
+# Opción 1: Definir manualmente un par de escenarios
+#   fila 1: A1=0, A2=0, A5=0, A6=1
+#   fila 2: A1=1, A2=1, A5=1, A6=4
+escenarios <- data.frame(
+  A1 = c(0, 1),
+  A2 = c(0, 1),  
+  A5 = c(0, 1),
+  A6 = c(1, 4)
+)
+
+# Predicción en escala logit
+logit_prediccion <- predict(modelo, newdata = escenarios, type = "link")
+
+# Convertir logit a probabilidad con la función logística
+probabilidad_prediccion <- exp(logit_prediccion) / (1 + exp(logit_prediccion))
+
+# Mostrar las probabilidades de cada escenario
+probabilidad_prediccion
+
+# Opción 2: Generar todas las combinaciones posibles
+# expand.grid crea todas las combinaciones de valores de A1, A2, A5 y A6
+escenarios <- expand.grid(
+  A1 = c(0, 1),
+  A2 = c(0, 1),
+  A5 = c(0, 1),
+  A6 = 1:4
+)
+
+# Agregar columna con la probabilidad predicha para cada combinación
+escenarios$prob <- predict(modelo, newdata = escenarios, type = "response")
+
+# Ver tabla con escenarios y probabilidades
+View(escenarios)
