@@ -8,16 +8,15 @@
 library(readxl)
 
 # Importar base de datos
-data <- read_excel("identidad_pol.xlsx") #base de datos de la alumna Emilia Ximena: https://github.com/lesflores/portafolio-clases/blob/main/R_Politica_Publica/Identidad_pol.xlsx
-View(data)  # (opcional) ver datos en tabla
+data <- read_excel("identidad_pol.xlsx") #base de datos de estudiantes de LCP Emilia Ximena Villagomez y Natalia Kornhauser https://github.com/lesflores/portafolio-clases/blob/main/R_Politica_Publica/Identidad_pol.xlsx
+View(data)
 
 # Ajustar modelo logit
 # - A4 es la variable dependiente (dicotómica)
 # - A1, A2, A5 son dicotómicas (0/1)
 # - A6 es ordinal (1 a 4)
 modelo <- glm(A4 ~ A1 + A2 + A5 + A6,
-              data = data,
-              family = binomial("logit"))
+              data = data, family = binomial("logit"))
 
 # Resumen del modelo: coeficientes, errores estándar, valores z y p
 summary(modelo)
@@ -33,8 +32,7 @@ escenarios <- data.frame(
   A1 = c(0, 1),
   A2 = c(0, 1),  
   A5 = c(0, 1),
-  A6 = c(1, 4)
-)
+  A6 = c(1, 4))
 
 # Predicción en escala logit
 logit_prediccion <- predict(modelo, newdata = escenarios, type = "link")
@@ -51,8 +49,7 @@ escenarios <- expand.grid(
   A1 = c(0, 1),
   A2 = c(0, 1),
   A5 = c(0, 1),
-  A6 = 1:4
-)
+  A6 = 1:4)
 
 # Agregar columna con la probabilidad predicha para cada combinación
 escenarios$prob <- predict(modelo, newdata = escenarios, type = "response")
