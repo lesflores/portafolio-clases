@@ -4,12 +4,10 @@
 # Universidad de Guanajuato
 #--------------------
 
-# Librería para leer Excel
-library(readxl)
+library(readxl) # Librería para leer Excel
 
 # Importar base de datos
 data <- read_excel("identidad_pol.xlsx") #base de datos de estudiantes de LCP Emilia Ximena Villagomez y Natalia Kornhauser https://github.com/lesflores/portafolio-clases/blob/main/R_Politica_Publica/Identidad_pol.xlsx
-View(data)
 
 # Ajustar modelo logit
 # - A4 es la variable dependiente (dicotómica)
@@ -18,16 +16,13 @@ View(data)
 modelo <- glm(A4 ~ A1 + A2 + A5 + A6,
               data = data, family = binomial("logit"))
 
-# Resumen del modelo: coeficientes, errores estándar, valores z y p
-summary(modelo)
+summary(modelo) # Resumen del modelo: coeficientes, errores estándar, valores z y p
 
 #--------------------
 # Predicción de probabilidades
 #--------------------
 
 # Opción 1: Definir manualmente un par de escenarios
-#   fila 1: A1=0, A2=0, A5=0, A6=1
-#   fila 2: A1=1, A2=1, A5=1, A6=4
 escenarios <- data.frame(
   A1 = c(0, 1),
   A2 = c(0, 1),  
