@@ -1,0 +1,34 @@
+#--------------------
+# Diferencias en diferencias (DiD)
+# Profesora: Lesly Flores
+# Universidad de Guanajuato
+#--------------------
+
+# Ejemplo con la base de datos "evaluation.dta" del Banco Mundial (BM)
+# El método de diferencias en diferencias compara los resultados a lo largo del tiempo 
+# entre una población inscrita en un programa (grupo de tratamiento) y una población 
+# no inscrita (grupo de comparación). Este método es útil cuando las reglas de asignación 
+# del programa no son completamente claras, es decir, no hay asignación aleatoria.
+
+# Librerías
+library(fixest) # Para modelos DiD
+library(haven) # Para leer archivos .dta
+
+# Leer el archivo "evaluation.dta" del BM. 
+# Puedes descargarla: https://openknowledge.worldbank.org/entities/publication/ebbe3565-69ff-5fe2-b65d-11329cf45293
+datos <- read_dta("evaluation.dta")
+
+# Seleccionar únicamente las localidades tratadas, es decir, aquellas que participaron en el programa que se está evaluando
+datos <- datos[datos$treatment_locality == 1, ]
+
+# Crear la variable de interacción. La interacción combina dos variables: si el hogar está inscrito en el programa (enrolled) 
+# y si el periodo es antes o después de la intervención (round).
+datos$enrolled_round <- datos$enrolled * datos$round
+
+# Realizar la regresión DiD 
+did_modelo <- feols(health_expenditures ~ enrolled_round + round + enrolled, 
+                   cluster = "locality_identifier", 
+                   data = datos)
+
+# Resultados del modelo DiD
+summary(did_modelo)
