@@ -32,3 +32,46 @@ did_modelo <- feols(health_expenditures ~ enrolled_round + round + enrolled,
 
 # Resultados del modelo DiD
 summary(did_modelo)
+
+#--------------------
+# Diferencias en diferencias (DiD)
+# Profesora: Lesly Flores
+# Universidad de Guanajuato
+#--------------------
+# Ejemplo con datos ficticios 
+
+library(fixest) # Para modelos DiD
+library(readxl) # Para leer excel
+
+# Leer el archivo
+datos <- read_excel("DID_ficticia.xlsx")
+
+View(datos)
+
+# Crear la variable de interacción. La interacción combina dos variables: 
+# si el municipio está inscrito en el programa (tratado) 
+# y si el periodo es antes o después de la intervención (post).
+datos$enrolled_round <- datos$tratado * datos$post
+
+# Modelo1 
+did_modelo1 <- feols(percepcion_seguridad ~ enrolled_round + post + tratado + pobreza,
+  cluster = "municipio",
+  data = datos)
+
+# Resultados1
+summary(did_modelo1)
+
+# Intercept: Es la percepción promedio de seguridad antes del programa en municipios no tratados, 
+# cuando pobreza = 0 (solo un punto de referencia base).
+
+# enrolled_round: Es el efecto causal del programa, en promedio, la percepción de seguridad aumentó 
+# 6.5 puntos más en los municipios tratados después del programa, en comparación con los no tratados.
+
+# post: La percepción general aumentó 2.9 puntos en todos los municipios (tratados y no tratados) 
+# después del periodo, pero el efecto no es significativo.
+
+# tratado: Antes del programa, los municipios tratados y los no tratados eran prácticamente iguales 
+# en percepción 0.12 (sin significancia).
+
+# pobreza: Por cada punto más de pobreza, la percepción de seguridad baja 0.015 puntos, 
+# pero es no significativo.
