@@ -1,0 +1,33 @@
+#--------------------
+# Análisis Comparativo Cualitativo Nítido (Crisp-Set o csQCA)
+# Profesora Lesly Flores
+# Ejemplo con los datos de Adiart, A. (2009). 
+# Dilemas de la estabilidad democrática en América Latina. 
+# América Latina Hoy , 24. https://doi.org/10.14201/alh.2620
+#--------------------
+library(SetMethods)
+library(QCA)
+
+# Datos
+datos <- data.frame(
+  Casos = c("Brasil", "Colombia", "Ecuador", "Uruguay", "Argentina",
+            "Chile", "Peru", "Venezuela", "Bolivia", "Paraguay", "México"),
+  A = c(1,1,1,1,1,1,1,1,1,0,1),   # EXPORTADORA
+  B = c(0,0,0,0,0,1,1,1,1,0,1),   # MINERIA
+  C = c(0,1,1,1,1,0,0,0,0,0,1),   # PARTIDO CLIENTELAR
+  D = c(1,1,0,1,0,1,0,0,0,0,0),   # COMPETENCIA
+  OLA1 = c(1,1,1,1,1,0,0,0,0,0,0)) # Resultado
+
+# Tabla de Verdad
+# incl.cut. Un puntaje de 1 indica que la configuración de condiciones es suficiente para el resultado
+tv <- truthTable(data = datos, outcome = "OLA1", conditions = c("A, B, C, D"), incl.cut= 1, complete=TRUE)
+tv
+
+# Condiciones Necesarias 
+QCAfit(x = datos[, c("A", "B", "C", "D")], y = datos$OLA1, necessity = TRUE)
+
+# Minimización Booleana
+minimize(input = tv, include = "all", details = TRUE)
+
+# Resultado
+# M1: A*~B*C + A*~B*D <-> OLA1
