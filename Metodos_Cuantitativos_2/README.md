@@ -24,3 +24,7 @@ https://forms.office.com/r/66B1pq0Eeb
 
 ## Pregunta de evaluación #9:
 https://forms.office.com/r/jTevpyBNjw
+https://forms.office.com/r/uwxHQ0BCp9
+
+## Pregunta de evaluación #10:
+https://forms.office.com/r/8s8q60RXAe
