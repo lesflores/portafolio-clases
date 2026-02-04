@@ -94,3 +94,8 @@ grafica <- ggplot(pibpc_mba, aes(x = year, y = PIBPC, color = country)) +
   theme_minimal()
 
 grafica
+
+# Variables en WDI
+# https://wits.worldbank.org/wits/wits/WITSHELP-es/content/codes/country_codes.htm
+# Names países
+# https://databank.worldbank.org/source/world-development-indicators
