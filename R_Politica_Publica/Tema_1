@@ -46,7 +46,7 @@ pibpc_mba <- WDI(
   country = c("MEX", "BRA", "ARG"),
   indicator = c(PIBPC = "NY.GDP.PCAP.CD"),
   start = 2000,
-  end   = 2023
+  end   = 2024
 )
 
 glimpse(pibpc_mba) # Ver la tabla
@@ -73,11 +73,11 @@ pibpc_2010 %>%
   arrange(desc(PIBPC)) %>%
   head(6)
 
-# 3.3. Para 2023, ¿qué país tuvo el mayor valor?
+# 3.3. Para 2024, ¿qué país tuvo el mayor valor?
 
-pibpc_2023 <- pibpc_mba %>% filter(year == 2023)
+pibpc_2024 <- pibpc_mba %>% filter(year == 2024)
 
-pibpc_2023 %>%
+pibpc_2024 %>%
   arrange(desc(PIBPC))
 
 # ----------------------------------------------------------
