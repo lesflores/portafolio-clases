@@ -88,7 +88,7 @@ pibpc_2024 %>%
 grafica <- ggplot(pibpc_mba, aes(x = year, y = PIBPC, color = country)) +
   geom_line(size = 1) +
   labs(title = "PIB per cápita (USD corrientes)",
-       subtitle = "México, Brasil y Argentina (2000–2023)",
+       subtitle = "México, Brasil y Argentina (2000–2024)",
        x = "Año", y = "USD por persona",
        caption = "Fuente: World Bank WDI") +
   theme_minimal()
