@@ -1,0 +1,213 @@
+# =========================================================
+# CLASE: GRAFICAS SEGUN EL TIPO DE DATA FRAME
+# Requiere: ggplot2
+# =========================================================
+
+# Instalar ggplot2 si no lo tienes
+# install.packages("ggplot2")
+
+library(ggplot2)
+
+# =========================================================
+# 1. DATA FRAME CON CATEGORIAS -> GRAFICA DE BARRAS
+# =========================================================
+
+df_barras <- data.frame(
+  servicio = c("Agua", "Alumbrado", "Limpia", "Seguridad", "Parques"),
+  personas = c(45, 30, 20, 50, 25)
+)
+
+print(df_barras)
+
+ggplot(df_barras, aes(x = servicio, y = personas)) +
+  geom_col(fill = "steelblue") +
+  labs(
+    title = "Cantidad de personas por servicio",
+    x = "Servicio",
+    y = "Número de personas"
+  ) +
+  theme_minimal()
+
+# Cuándo usarla:
+# Cuando tienes una variable categorica y una numerica.
+
+
+# =========================================================
+# 2. DATA FRAME CON TIEMPO -> GRAFICA DE LINEA
+# =========================================================
+
+df_linea <- data.frame(
+  anio = 2020:2025,
+  percepcion_seguridad = c(42, 40, 38, 44, 47, 50)
+)
+
+print(df_linea)
+
+ggplot(df_linea, aes(x = anio, y = percepcion_seguridad)) +
+  geom_line(linewidth = 1) +
+  geom_point(size = 2) +
+  labs(
+    title = "Percepción de seguridad a lo largo del tiempo",
+    x = "Año",
+    y = "Porcentaje"
+  ) +
+  theme_minimal()
+
+# Cuándo usarla:
+# Cuando quieres mostrar tendencia o cambio a través del tiempo.
+
+
+# =========================================================
+# 3. DATA FRAME CON UNA VARIABLE NUMERICA -> HISTOGRAMA
+# =========================================================
+
+set.seed(123)
+
+df_hist <- data.frame(
+  ingreso = round(rnorm(100, mean = 12000, sd = 2500), 0)
+)
+
+head(df_hist)
+
+ggplot(df_hist, aes(x = ingreso)) +
+  geom_histogram(bins = 10, fill = "darkorange", color = "white") +
+  labs(
+    title = "Distribución del ingreso",
+    x = "Ingreso",
+    y = "Frecuencia"
+  ) +
+  theme_minimal()
+
+# Cuándo usarla:
+# Cuando quieres ver la distribución de una variable numerica.
+
+
+# =========================================================
+# 4. DATA FRAME CON DOS VARIABLES NUMERICAS -> DISPERSION
+# =========================================================
+
+df_dispersion <- data.frame(
+  horas_estudio = c(1, 2, 3, 4, 5, 6, 7, 8),
+  calificacion = c(55, 60, 63, 68, 72, 80, 85, 90)
+)
+
+print(df_dispersion)
+
+ggplot(df_dispersion, aes(x = horas_estudio, y = calificacion)) +
+  geom_point(size = 3) +
+  geom_smooth(method = "lm", se = FALSE) +
+  labs(
+    title = "Relación entre horas de estudio y calificación",
+    x = "Horas de estudio",
+    y = "Calificación"
+  ) +
+  theme_minimal()
+
+# Cuándo usarla:
+# Cuando quieres analizar la relación entre dos variables numericas.
+
+
+# =========================================================
+# 5. DATA FRAME CON GRUPOS Y VARIABLE NUMERICA -> BOXPLOT
+# =========================================================
+
+df_box <- data.frame(
+  grupo = rep(c("A", "B", "C"), each = 10),
+  puntaje = c(
+    70, 72, 68, 75, 80, 77, 74, 71, 69, 73,
+    60, 65, 67, 70, 62, 64, 68, 66, 61, 63,
+    82, 85, 88, 84, 86, 83, 87, 89, 81, 90
+  )
+)
+
+head(df_box)
+
+ggplot(df_box, aes(x = grupo, y = puntaje)) +
+  geom_boxplot(fill = "lightblue") +
+  labs(
+    title = "Distribución de puntajes por grupo",
+    x = "Grupo",
+    y = "Puntaje"
+  ) +
+  theme_minimal()
+
+# Cuándo usarla:
+# Cuando quieres comparar distribuciones entre grupos.
+
+
+# =========================================================
+# 6. DATA FRAME DE COMPOSICION -> BARRAS APILADAS
+# =========================================================
+
+df_apilada <- data.frame(
+  municipio = c("León", "León", "León",
+                "Irapuato", "Irapuato", "Irapuato",
+                "Celaya", "Celaya", "Celaya"),
+  respuesta = c("Buena", "Regular", "Mala",
+                "Buena", "Regular", "Mala",
+                "Buena", "Regular", "Mala"),
+  frecuencia = c(50, 30, 20,
+                 40, 35, 25,
+                 30, 40, 30)
+)
+
+print(df_apilada)
+
+ggplot(df_apilada, aes(x = municipio, y = frecuencia, fill = respuesta)) +
+  geom_col() +
+  labs(
+    title = "Opinión sobre el servicio por municipio",
+    x = "Municipio",
+    y = "Frecuencia",
+    fill = "Respuesta"
+  ) +
+  theme_minimal()
+
+# Cuándo usarla:
+# Cuando quieres comparar composicion de categorias dentro de grupos.
+
+
+# =========================================================
+# 7. DATA FRAME CON PROPORCIONES -> GRAFICA DE PASTEL
+# =========================================================
+# Nota: suele usarse menos en analisis academico,
+# pero puede ser util para mostrar composicion simple.
+
+df_pastel <- data.frame(
+  categoria = c("Sí", "No", "No sabe"),
+  frecuencia = c(60, 30, 10)
+)
+
+df_pastel$porcentaje <- df_pastel$frecuencia / sum(df_pastel$frecuencia)
+df_pastel$etiqueta <- paste0(df_pastel$categoria, " (", df_pastel$frecuencia, ")")
+
+print(df_pastel)
+
+ggplot(df_pastel, aes(x = "", y = frecuencia, fill = categoria)) +
+  geom_col(width = 1) +
+  coord_polar(theta = "y") +
+  labs(
+    title = "Distribución de respuestas",
+    fill = "Categoría"
+  ) +
+  theme_void()
+
+# Cuándo usarla:
+# Cuando solo quieres mostrar partes de un total de forma muy simple.
+
+
+# =========================================================
+# 8. RESUMEN RAPIDO PARA CLASE
+# =========================================================
+
+cat("
+TIPO DE DATA FRAME -> GRAFICA SUGERIDA
+
+1) Categorica + numerica           -> Barras
+2) Tiempo + numerica               -> Linea
+3) Una numerica                    -> Histograma
+4) Dos numericas                   -> Dispersion
+5) Grupo + numerica                -> Boxplot
+6) Grupo + categoria + frecuencia  -> Barras apiladas
+7) Partes de un total              -> Pastel
+")
