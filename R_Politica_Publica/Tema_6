@@ -1,5 +1,6 @@
 # =========================================================
 # CLASE: GRAFICAS SEGUN EL TIPO DE DATA FRAME
+# Autor: ejemplo didactico
 # Requiere: ggplot2
 # =========================================================
 
@@ -120,7 +121,7 @@ df_box <- data.frame(
   )
 )
 
-head(df_box)
+View(df_box)
 
 ggplot(df_box, aes(x = grupo, y = puntaje)) +
   geom_boxplot(fill = "lightblue") +
@@ -191,6 +192,13 @@ ggplot(df_pastel, aes(x = "", y = frecuencia, fill = categoria)) +
     fill = "Categoría"
   ) +
   theme_void()
+
+# usa frecuencia como tamaño de cada parte y categoria como color.
+# width = 1 hace que la barra ocupe todo el espacio disponible.
+# coord_polar() cambia el sistema de coordenadas rectangulares a polares.
+# theta = "y" indica que la variable y (frecuencia) será la que determine el ángulo de cada porción.
+# theme_void(): Quita casi todos los elementos visuales innecesarios.
+
 
 # Cuándo usarla:
 # Cuando solo quieres mostrar partes de un total de forma muy simple.
