@@ -23,6 +23,9 @@ tab
 chisq.test(tab)
 
 # p-value < 0.05 significa que rechazamos la hipótesis nula de independencia.
+# Si el valor p es menor a 0.05, hay evidencia estadística para decir que las variables sí están asociadas.
+# H0: Las variables son independientes, es decir, no hay relación entre ellas.
+# H1: Las variables no son independientes, es decir, sí hay relación entre ellas.
 
 # (4) Porcentajes por FILA (cada partido = 100%)
 # Te dice: dentro de cada partido, cómo se reparte el estado civil
